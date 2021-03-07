@@ -1,0 +1,58 @@
+---
+title: "Session 1: Intro to R and RStudion for Evaluators"
+author: "Nicole Harty"
+date: "2/13/2021"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Goals
+Explain file directories, file types, and project structure  
+Install and use major packages to import data and create data frames  
+
+## Introductions  
+Name  
+Where you work  
+Favorite thing about SPRING  
+
+## Software Structure and Nomenclature  
+  
+- Base R vs RStudio  
+- [https://cran.r-project.org/](CRAN and packages)
+- Look and Feel of RStudio  
+
+## File Types and Directories  
+  
+- .Rproj
+- .R  
+- Directories = file paths or folders, important for accessing files  
+
+
+## Packages  
+  
+- Opening files: openxlsx, readr
+- Data analysis: psych, lme4, likert
+- Data wrangling: tidyverse (dplyr, forcats, stringr)  
+- Dates: lubridate  
+- Data visualization: ggplot2, plotly
+- Working with Common Online Data Sources: googlesheets, qualtRics  
+- RMarkdown: knitr, rmarkdown  
+
+## Load Data, Review  
+
+- Data types  
+- Environment viewer  
+- View dataset  
+
+
+## Resources and Help 
+
+- [https://community.rstudio.com/](RStudio Community)  
+- [https://rstudio.com/resources/cheatsheets/](RStudio Cheatsheets)  
+- [https://r4ds.had.co.nz/](R for Data Science - the "Bible")
+- [https://stackoverflow.com/questions/tagged/r](Stack Overflow)  
+- Github repositories / comments for specific packages  
+

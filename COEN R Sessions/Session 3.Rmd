@@ -1,0 +1,63 @@
+---
+title: "COEN R and RMarkdown Professional Development Series"
+subtitle: "Session 3: Reporting and Visualization Using RMarkdown, likert, ggplot2, and plotly"
+author: "Nicole Harty"
+date: "2/18/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(openxlsx)
+library(googlesheets4)
+library(tidyverse)
+library(lubridate)
+library(likert)
+library(plotly)
+
+source("Session2.R")
+```
+
+
+
+# Session Objectives  
+
+* Explain the structure of files used in creating an RMarkdown report (.R, .Rmd, .md, .html)
+* Author in-line and chunk R code
+* Interpret and correct common errors
+* Generate basic plots using ggplot, likert, and plotly packages
+
+# R Markdown Resources  
+Cheatsheets:  
+
+* 
+* 
+
+Other 
+
+# Example In-Line Code  
+
+# Chunks  
+
+## Not Printed  
+```{r label = exampleChunkNotPrinted, results = 'hide'}
+
+```
+
+## Printed  
+```{r label = exampleChunkPrinted}
+```
+
+# Plots  
+Below are examples of three types of plots. First, ggplot (from the ggplot2 package). This package is maintained by the RStudio team and is the basis for many other data viz packages. Second, likert, a package maintained by an independent person (Jason Bryer) that easily and in minimal code creates plots of likert data. Finally, plotly, which is based on JavaScript and allows for interactive graphs.    
+
+## ggplot2  
+
+## likert
+
+## plotly  
+
+
+
+
