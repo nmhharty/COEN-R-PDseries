@@ -3,11 +3,16 @@ title: "COEN R and RMarkdown Professional Development Series"
 subtitle: "Session 3: Reporting and Visualization Using RMarkdown, likert, ggplot2, and plotly"
 author: "Nicole Harty"
 date: "2/18/2021"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 5
+    css: template.css
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
 library(openxlsx)
 library(googlesheets4)
@@ -15,8 +20,11 @@ library(tidyverse)
 library(lubridate)
 library(likert)
 library(plotly)
+library(kableExtra)
 
 source("Session2.R")
+
+#Setting a value to use as your parameter
 ```
 
 
@@ -29,35 +37,61 @@ source("Session2.R")
 * Generate basic plots using ggplot, likert, and plotly packages
 
 # R Markdown Resources  
-Cheatsheets:  
+Cheatsheets: [https://rstudio.com/resources/cheatsheets//](All RStudio Cheatsheets)    
 
-* 
-* 
+*  R Markdown Cheatsheet  
+*  R Markdown Reference Guide  
 
-Other 
+Other: [https://bookdown.org/yihui/rmarkdown/](R Markdown: The Definitive Guide) 
+
 
 # Example In-Line Code  
+
+
 
 # Chunks  
 
 ## Not Printed  
 ```{r label = exampleChunkNotPrinted, results = 'hide'}
-
+SurveyXLSX %>%
+  group_by(week(Timestamp)) %>%
+  count()
 ```
 
 ## Printed  
 ```{r label = exampleChunkPrinted}
+SurveyXLSX %>%
+  group_by(week(Timestamp)) %>%
+  count()
 ```
+
+## Formatted Table  
+```{r label = exampleKableTable}
+SurveyXLSX %>%
+  group_by(week(Timestamp)) %>%
+  count() %>%
+  kable(caption = "R Course Survey Responses by Week")
+```
+
+
 
 # Plots  
 Below are examples of three types of plots. First, ggplot (from the ggplot2 package). This package is maintained by the RStudio team and is the basis for many other data viz packages. Second, likert, a package maintained by an independent person (Jason Bryer) that easily and in minimal code creates plots of likert data. Finally, plotly, which is based on JavaScript and allows for interactive graphs.    
 
 ## ggplot2  
+```{r label = ggplotGraph}
+```
 
 ## likert
+```{r label = LikertPrep}
+```
+
+```{r label = LikertGraph}
+```
 
 ## plotly  
-
+```{r label = exampleChunkPrinted}
+```
 
 
 

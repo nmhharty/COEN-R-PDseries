@@ -4,6 +4,7 @@
 #Fist Authored: 2/13/2021 Nicole Harty
 #Last Updated: 3/06/2021 Nicole Harty
 
+
 # Session Objectives:
 ## Explain file directories, file types, and project structure
 ## Install and use major packages to import data and create data frames
@@ -17,7 +18,7 @@ library(tidyverse)
 getwd()
 #Change wd if needed
 #first with code
-setwd("U:/COEN R PD/COEN R Sessions")
+setwd("U:/COEN R PD/COEN-R-PDseries/COEN R Sessions")
 #second using GUI
 
 #load data file
@@ -33,7 +34,8 @@ SurveyXLSX <- read.xlsx("R Workshop (Responses).xlsx")
 #from API connection to Google Sheets
 read_sheet("https://docs.google.com/spreadsheets/d/17uyz1A90D6XgGKi_Qer-ssgkWRdPmKACEOHzk0FhjiI/edit#gid=790590919")
 #save this data as a dataframe
-SurveyGSheetAPI <- read_sheet("https://docs.google.com/spreadsheets/d/17uyz1A90D6XgGKi_Qer-ssgkWRdPmKACEOHzk0FhjiI/edit#gid=790590919")
+##commented this out because don't want to use live connectioncommented this out because don't want
+# SurveyGSheetAPI <- read_sheet("https://docs.google.com/spreadsheets/d/17uyz1A90D6XgGKi_Qer-ssgkWRdPmKACEOHzk0FhjiI/edit#gid=790590919")
 
 #look at the data
 ##use data viewer

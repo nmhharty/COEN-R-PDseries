@@ -1,5 +1,5 @@
 ---
-title: "Session 1: Intro to R and RStudion for Evaluators"
+title: "Session 1: Intro to R and RStudio for Evaluators"
 author: "Nicole Harty"
 date: "2/13/2021"
 output: slidy_presentation
@@ -47,12 +47,18 @@ Favorite thing about SPRING
 - Environment viewer  
 - View dataset  
 
+## Google API Connection  
+![](GoogleAPIBrowserPrompt.png)
+![](RConsoleNewGoogleAPIAuth.png)
+
 
 ## Resources and Help 
 
-- [https://community.rstudio.com/](RStudio Community)  
-- [https://rstudio.com/resources/cheatsheets/](RStudio Cheatsheets)  
-- [https://r4ds.had.co.nz/](R for Data Science - the "Bible")
+- [R Studio Community](https://community.rstudio.com/)  
+- [RStudio Cheatsheets](https://rstudio.com/resources/cheatsheets/)  
+- [R for Data Science - the "Bible"](https://r4ds.had.co.nz/)
 - [https://stackoverflow.com/questions/tagged/r](Stack Overflow)  
+- [R for the Rest of Us](https://rfortherestofus.com/) also Twitter @rfortherest
+- @WeAreRLadies on Twitter  
 - Github repositories / comments for specific packages  
 
