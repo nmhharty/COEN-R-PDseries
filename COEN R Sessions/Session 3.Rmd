@@ -2,7 +2,7 @@
 title: "COEN R and RMarkdown Professional Development Series"
 subtitle: "Session 3: Reporting and Visualization Using RMarkdown, likert, ggplot2, and plotly"
 author: "Nicole Harty"
-date: "2/18/2021"
+date: "3/31/2021"
 output: 
   html_document:
     toc: true
@@ -44,10 +44,15 @@ Cheatsheets: [https://rstudio.com/resources/cheatsheets//](All RStudio Cheatshee
 
 Other: [https://bookdown.org/yihui/rmarkdown/](R Markdown: The Definitive Guide) 
 
+# Formatting  
+This is a sentence that includes *italics*.  
+This is a sentence that includes **bolded text**.  
 
 # Example In-Line Code  
 
+There were **`r SurveyXLSX %>% count()`** to this survey. The most recent response was **`r max(SurveyXLSX$Timestamp)`**.  
 
+You may want to reference or link to another section in your report, such as where [Tables](#Tables) are formatted. 
 
 # Chunks  
 
@@ -65,33 +70,168 @@ SurveyXLSX %>%
   count()
 ```
 
-## Formatted Table  
+# Formatted Tables{#Tables}  
+ 
 ```{r label = exampleKableTable}
 SurveyXLSX %>%
-  group_by(week(Timestamp)) %>%
+  group_by(WeekOfResponse = week(Timestamp)) %>%
   count() %>%
-  kable(caption = "R Course Survey Responses by Week")
+  kable(caption = "R Course Survey Responses by Week, Kable Table")
 ```
 
+**In-line Formatted Table**  
+This is an incredibly inefficient way to create this table, but it illustrates how to create a formatted table with both static text and dynamic code to populate data.  
+
+|Week Of Response|Number of Responses|
+|-----|------|
+|7|`r SurveyXLSX %>% group_by(WeekOfResponse = week(Timestamp)) %>% count() %>% filter(WeekOfResponse==7) %>% pull(n)`|
+|8|`r SurveyXLSX %>% group_by(WeekOfResponse = week(Timestamp)) %>% count() %>% filter(WeekOfResponse==8) %>% pull(n)`|
+|9|`r SurveyXLSX %>% group_by(WeekOfResponse = week(Timestamp)) %>% count() %>% filter(WeekOfResponse==8) %>% pull(n)`|
+|10|`r SurveyXLSX %>% group_by(WeekOfResponse = week(Timestamp)) %>% count() %>% filter(WeekOfResponse==8) %>% pull(n)`|
 
 
 # Plots  
-Below are examples of three types of plots. First, ggplot (from the ggplot2 package). This package is maintained by the RStudio team and is the basis for many other data viz packages. Second, likert, a package maintained by an independent person (Jason Bryer) that easily and in minimal code creates plots of likert data. Finally, plotly, which is based on JavaScript and allows for interactive graphs.    
+Below are examples of three types of plots. First, ggplot (from the ggplot2 package). This package is maintained by the RStudio team and is the basis for many other data viz packages. Second, likert, a package maintained by an independent person (Jason Bryer) that easily and in minimal code creates plots of likert data. Finally, plotly, which is open source, based on JavaScript and allows for interactive graphs.      
 
 ## ggplot2  
-```{r label = ggplotGraph}
+https://ggplot2.tidyverse.org/index.html  
+The two graphs below are identical but are coded slightly differently. The first gets a summary table and creates the graph from that whereas the second uses the raw data in long form without creating the summary table.  
+
+```{r label = ggplotGraphCount, fig.height = 5, fig.width = 8}
+#first we need the data in long form where all the columns with Likert data are in one column
+SurveyXLSX %>%
+  pivot_longer(3:8, names_to = "Question", values_to = "Response") %>%
+  group_by(Question, Response) %>%
+  summarise(CountResponse = n()) %>%
+  ggplot(aes(x=Question, y=CountResponse, fill=Response)) + geom_bar(position = "stack", stat="identity") +
+  scale_fill_brewer(palette = "Blues") +
+  theme_classic() + theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+  labs(y = "Count", title = "Count of Response Options by Question")
+
+
+SurveyXLSX %>%
+  pivot_longer(3:8, names_to = "Question", values_to = "Response") %>%
+  ggplot(aes(x=Question,fill=Response)) + geom_bar(position = "stack", stat="count", grouping = "Response") +
+  scale_fill_brewer(palette = "Blues") +
+  theme_classic() + theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+  labs(y = "Count", title = "Count of Response Options by Question")
+  
 ```
 
-## likert
+This next graph is has additional formatting and is stacked percentages rather than counts.  
+
+```{r label = ggplotGraphPercent}
+library(scales)
+SurveyXLSX %>%
+  pivot_longer(3:8, names_to = "Question", values_to = "Response") %>%
+  ggplot(aes(x=Question,fill=Response)) + geom_bar(position = "fill", stat="count", grouping = "Response") +
+  scale_fill_brewer(palette = "Blues") +
+  theme_classic() + theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+  labs(title = "Experience Questions, \nPercentage of Responses") + 
+  scale_y_continuous(name = "Percentage", labels = percent) +
+  scale_x_discrete(labels = c("ExperienceDataCategorical" = "Categorical Data", "ExperienceDataDateTime" = "Datetime Data",
+                              "ExperienceDataFactor" =  "Factor Data", "ExperienceDataNumeric" =  "Numeric Data", 
+                              "ExperienceProgCode" = "Programming or Coding", "ExperienceR" =  "R"))
+
+```
+
+
+## likert  
+Likert package uses one column per Likert question, wide form.  
+```{r label = LikertGraph1}
+# likert(SurveyXLSX[,c(3:8)]) %>%
+#   plot()
+
+likert(SurveyXLSX[,c(4:5)]) %>%
+  plot()
+
+```
+
+Unlike ggplot, likert requires that all variables have the same number of levels. In order to use the likert package, we will need to ensure all variables we want to plot have the same levels. We will use fct_unify
+
 ```{r label = LikertPrep}
+
+SurveyXLSX[,c(3:8)] <- fct_unify(SurveyXLSX[,c(3:8)])
 ```
 
-```{r label = LikertGraph}
+```{r label = LikertGraph2, results='hide', fig.cap = "Likert Plot of Responses", fig.height = 2.5, fig.width = 8}
+likert(SurveyXLSX[,c(3:8)]) %>%
+  plot()
+
 ```
 
 ## plotly  
-```{r label = exampleChunkPrinted}
+plotly requires data in longform, similar to ggplot.  
+[https://plotly.com/r/](https://plotly.com/r/) is the reference site for all things plotly.  
+
+This first plot is more basic than the second as uses counts.  
+
+```{r label = PLotlyGraphCount}
+SurveyXLSX %>%
+  pivot_longer(3:8, names_to = "Question", values_to = "Response") %>%
+  group_by(Question, Response) %>%
+  summarise(CountResponse = n()) %>%
+  pivot_wider(names_from = "Response", values_from = "CountResponse") %>%
+plot_ly(x = ~Question,
+  y = ~Novice,
+  type = "bar",
+  name = "Novice") %>%
+add_trace(y = ~`Basic knowledge or little to none`,
+  type = "bar",
+  name = "Basic knowledge or little to none") %>%
+add_trace(y = ~Intermediate,
+  type = "bar",
+  name = "Intermediate") %>%
+add_trace(y = ~Advanced,
+  type = "bar",
+  name = "Advanced") %>%
+layout(title = "Plotly Graph of Questions Response Counts",
+       xaxis = list(title = "Question",
+                    tickvals = c("ExperienceDataCategorical", "ExperienceDataDateTime", "ExperienceDataFactor", "ExperienceDataNumeric",
+                                 "ExperienceProgCode", "ExperienceR"), 
+                    ticktext = c("Categorical Data","Datetime Data", "Factor Data", "Numeric Data", "Programming or Coding", "R")),
+       yaxis = list(title = "Count"),
+       barmode = "stack",
+       font = list(family = "Arial", size = 12)) 
 ```
 
+This next plot is more advanced/customized and uses percentages.  
 
+```{r label = PlotlyGraphPercent}
+SurveyXLSX %>%
+  pivot_longer(3:8, names_to = "Question", values_to = "Response") %>%
+  group_by(Question, Response) %>%
+  summarise(CountResponse = n()) %>%
+  left_join((SurveyXLSX %>%
+               pivot_longer(3:8, names_to = "Question", values_to = "Response") %>%
+               group_by(Question) %>%
+               summarise(Total = n())), by = "Question") %>%
+  mutate(Percentage = CountResponse/Total*100) %>%
+  pivot_wider(names_from = "Response", values_from = "Percentage") %>%
+plot_ly(x = ~Question,
+  y = ~Novice,
+  type = "bar",
+  name = "Novice",
+  color = I("#525657")) %>%
+add_trace(y = ~`Basic knowledge or little to none`,
+  type = "bar",
+  name = "Basic knowledge or little to none",
+  color = I("#BB4628")) %>%
+add_trace(y = ~Intermediate,
+  type = "bar",
+  name = "Intermediate",
+  color = ("#F2BF4C")) %>%
+add_trace(y = ~Advanced,
+  type = "bar",
+  name = "Advanced",
+  color = I("#4F9237")) %>%
+layout(title = "Plotly Graph of Questions Response Percentage",
+       xaxis = list(title = "Question",
+                    tickvals = c("ExperienceDataCategorical", "ExperienceDataDateTime", "ExperienceDataFactor", "ExperienceDataNumeric",
+                                 "ExperienceProgCode", "ExperienceR"), 
+                    ticktext = c("Categorical Data","Datetime Data", "Factor Data", "Numeric Data", "Programming or Coding", "R")),
+       yaxis = list(title = "Percentage"),
+       barmode = "stack",
+       font = list(family = "Arial", size = 12)) 
+```
 

@@ -43,7 +43,7 @@ SurveyXLSX[,c(1)] <- as.POSIXct(SurveyXLSX[,c(1)])
 
 #the PIPE operator
 #read the pipe as "AND THEN": "Take the SurveyXLSX data frame AND THEN select a few columns AND THEN filter to rows where column __ is ___"
-SurveyXLSX %>%
+SurveyXLSX %>% 
   select(Timestamp) %>%
   filter(Timestamp > "2021-03-01")
 
@@ -58,6 +58,7 @@ SurveyXLSX <- SurveyXLSX %>%
          ExperienceDataNumeric = `What.is.your.level.of.experience.working.with.the.following.data.types?.[Numeric]`,
          ExperienceDataCategorical = `What.is.your.level.of.experience.working.with.the.following.data.types?.[Categorical]`,
          ExperienceDataFactor = `What.is.your.level.of.experience.working.with.the.following.data.types?.[Factor]`,
+         ExperienceDataDateTime = `What.is.your.level.of.experience.working.with.the.following.data.types?.[Datetime]`
          ## Type in additional columns in real time for demonstration##
          )
 
@@ -66,10 +67,19 @@ SurveyXLSX <- SurveyXLSX %>%
 ##How many total responses?
 SurveyXLSX %>%
   count()
+
+###using summarise
+SurveyXLSX %>%
+  summarise("Total Responses" = n())
+
 ##Save the number as a VALUE
 TotalResponses <- SurveyXLSX %>%
   count() %>%
   ##if just run through count() it will save as a df
+  pull()
+SurveyXLSX %>%
+  select(Timestamp) %>%
+  filter(Timestamp>"2021-03-03") %>%
   pull()
 
 ##How many responses each day?
@@ -81,7 +91,7 @@ SurveyXLSX %>%
 ##How many responses each week
 ###Weeks are "number of complete seven day periods that have occurred between the date and January 1, plus one" (See Help: Week)
 SurveyXLSX %>%
-  group_by(week(Timestamp)) %>%
+  group_by(WeekOfResponse = week(Timestamp)) %>%
   count()
 
 
@@ -120,19 +130,18 @@ SurveyXLSX <- SurveyXLSX %>%
 SurveyXLSX %>%
   mutate(ExpRcat = case_when(ExperienceR=="Novice" ~ "Low",
                              ExperienceR=="Basic knowledge or little to none" ~ "Low",
-                             # ExperienceR=="Intermediate" ~ "High",
-                             # ExperienceR=="Advanced" ~ "High",
+                             ExperienceR=="Intermediate" ~ "High",
+                             ExperienceR=="Advanced" ~ "High",
                              TRUE ~ as.character(NA)))
 SurveyXLSX %>%
   mutate(ExpRcat = case_when(ExperienceR=="Novice"|ExperienceR=="Basic knowledge or little to none" ~ "Low",
                              ExperienceR=="Advanced"|ExperienceR=="Intermediate" ~ "High",
-                             TRUE ~ as.character(NA)))
+                             TRUE ~ as.character(NA))) 
 #Note: new column is character/string as default. Will need to convert to factor if want to use as factor
 
 ##IFELSE 2 examples. 1) more code, less complex Boolean operators 2) less code, more complex Boolean operators
 SurveyXLSX %>%
   mutate(ExpRcat = if_else(ExperienceR=="Novice","Low",
-                         #  "other",
                            if_else(ExperienceR=="Basic knowledge or little to none","Low","other"))
          )
 SurveyXLSX %>%
@@ -156,5 +165,8 @@ str_replace(SurveyXLSX$NewColumnExampleText, "a", "HELLO")
 str_replace_all(SurveyXLSX$NewColumnExampleText, "a", "HELLO")
 
 ##join strings together, CONCATENATE in Excel or SQL
-str_c(SurveyXLSX$NewColumnExampleText, SurveyXLSX$NewColumnExampleFormula, sep = "")
+str_c(SurveyXLSX$NewColumnExampleText, SurveyXLSX$NewColumnExampleFormula, sep = ",")
 
+
+
+#JOINS if time
